@@ -6,10 +6,10 @@ var sutraimage=Require("sutraimage");
 
 var recension = React.createClass({
   getInitialState: function() {
-    var p=this.props.line;
-    var pa=utils.parseVolPage(p.substr(0,p.length-1));
-    var page=this.snap2realpage(pa);
-    return {volpage:page,recen:this.props.recen};
+    var c=utils.parseVolPage(this.props.line);
+    var corresLine=this.snap2realpage(c);
+    var realpage=corresLine.vol+"."+corresLine.page+corresLine.side;
+    return {volpage_noPar:realpage,volpage:corresLine,recen:this.props.recen};
   },
   goNext: function() {
     var p=this.refs.pg.getDOMNode().innerHTML;
@@ -22,12 +22,21 @@ var recension = React.createClass({
         return m1+"."+newpage+"a";
       }
     });
-    console.log(page);
-    this.setState({volpage:utils.parseVolPage(page),recen:this.props.recen});
+    this.setState({volpage_noPar:page,volpage:utils.parseVolPage(page),recen:this.props.recen});
   },
-  goPrev: function(e) {    
-    var page=this.refs.pg.getDOMNode().innerHTML;
-    console.log(this.props.recen[0],page);
+  goPrev: function() {    
+    var p=this.refs.pg.getDOMNode().innerHTML;
+    var page=p.replace(/(\d+).(\d+)([ab])/g,function(m,m1,m2,m3){//m1函 m2頁 m3面
+      if(m3 == "a"){
+        var newpage=m2-1;
+        if(newpage <0) newpage=0;
+        return m1+"."+newpage+"b";
+      }
+      if(m3 == "b"){
+        return m1+"."+m2+"a";
+      }
+    });
+    this.setState({volpage_noPar:page,volpage:utils.parseVolPage(page),recen:this.props.recen});
   },
   snap2realpage: function(id){
     if(id.side == "c"){
@@ -40,13 +49,10 @@ var recension = React.createClass({
     return id;
   },
   render: function() {
-    var c=utils.parseVolPage(this.props.line);
-    var corresLine=this.snap2realpage(c);
-    var realpage=corresLine.vol+"."+corresLine.page+corresLine.side;
         return(
       <div>
         <span className="recen">{this.props.recen}</span>
-        <span ref="pg">{realpage}</span>
+        <span ref="pg">{this.state.volpage_noPar}</span>
         <button className="btn btn-success" onClick={this.goPrev}>←</button>
         <button className="btn btn-success" onClick={this.goNext}>→</button> 
         <sutraimage volpage={this.state.volpage} recen={this.state.recen} />

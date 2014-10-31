@@ -28,7 +28,7 @@ var sutraimage = React.createClass({
     var recen=this.props.recen||"";
     return (
       <div>
-        <img src={this.renderImage(this.props.volpage,this.props.recen)}></img>
+        <img width="100%" src={this.renderImage(this.props.volpage,this.props.recen)}></img>
       </div>
     );
   }

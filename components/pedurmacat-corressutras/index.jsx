@@ -52,9 +52,10 @@ var recension = React.createClass({
         return(
       <div>
         <span className="recen">{this.props.recen}</span>
+        
+        <a href="#" onClick={this.goPrev}><img width="25" src="prev.png"/></a>
         <span ref="pg">{this.state.volpage_noPar}</span>
-        <button className="btn btn-success" onClick={this.goPrev}>←</button>
-        <button className="btn btn-success" onClick={this.goNext}>→</button> 
+        <a href="#" onClick={this.goNext}><img width="25" src="next.png"/></a> 
         <sutraimage volpage={this.state.volpage} recen={this.state.recen} />
       </div>
     );
